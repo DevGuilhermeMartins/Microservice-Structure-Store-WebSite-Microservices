@@ -36,7 +36,7 @@ public class CambioController {
 		return cambio;
 	}
 	
-	@Operation(summary = "Get a value and make a conversion by the currency from and to")
+	@Operation(summary = "Get a value and makes a conversion by the currency from and to")
 	@GetMapping
 	public Cambio getCambio(@RequestParam("amount") BigDecimal amount,
 							@RequestParam("from") String from,
