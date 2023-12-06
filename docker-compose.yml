@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  
+  cambio-db:
+    image: postgres:15.5-alpine3.18
+    restart: always
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=cambio-service
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=311005Ge
+    networks:
+      - BlueDiamond
+      
+  eureka-server:
+    image: eureka-server
+    build: ./eureka-server
+    ports:
+      - 8761:8761
+    networks:
+      - BlueDiamond
+      
+  cambio-service:
+    image: cambio-service
+    build: ./cambio-service
+    environment:
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://localhost:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://cambio-db:5432/cambio-service
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=311005Ge
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+    ports:
+      - 8000:8000
+    depends_on:
+      - eureka-server
+      - cambio-db
+    links:
+      - "eureka-server"
+      - "cambio-db"
+    networks:
+      - BlueDiamond
+ 
+networks:
+  BlueDiamond:
