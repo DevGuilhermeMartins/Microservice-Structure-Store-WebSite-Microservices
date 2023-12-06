@@ -17,7 +17,8 @@ In addition, this microservice utilizes a Eureka server to host all microservice
 - Flyway
 
 ## DataBase
-- MySQL
+- PostgreSQL
+- MySQL (Not Supported)
 
 # Author
 
