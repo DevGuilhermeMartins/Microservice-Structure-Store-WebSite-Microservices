@@ -2,10 +2,7 @@ package br.com.workcode.controller;
 
 import java.math.BigDecimal;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,16 +21,6 @@ public class CatalogController {
 
 	private final CatalogRepository catalogRepository;
 	
-	@Autowired
-	private RabbitTemplate rabbitTemplate;
-	
-	@PostMapping
-	public Catalog save(Catalog catalog) {
-		catalogRepository.save(catalog);
-		String routingKey = "catalog.v1.catalog-created";
-		rabbitTemplate.convertAndSend(routingKey, catalog.getId());
-		return catalog;
-	}
 	
 	@Operation(summary = "Take a Catalog and sum the amount with the fixed tax of the catalog")
 	@GetMapping

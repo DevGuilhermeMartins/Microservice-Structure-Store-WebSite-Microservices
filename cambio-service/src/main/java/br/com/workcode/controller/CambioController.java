@@ -3,10 +3,7 @@ package br.com.workcode.controller;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,17 +21,6 @@ import lombok.RequiredArgsConstructor;
 public class CambioController {
 
 	private final CambioRepository cambioRepository;
-	
-	@Autowired
-	private RabbitTemplate rabbitTemplate;
-	
-	@PostMapping
-	public Cambio saveCambio(Cambio cambio) {
-		cambioRepository.save(cambio);
-		String routingKey = "cambio.v1.cambio-created";
-		rabbitTemplate.convertAndSend(routingKey, cambio.getId());
-		return cambio;
-	}
 	
 	@Operation(summary = "Get a value and makes a conversion by the currency from and to")
 	@GetMapping
