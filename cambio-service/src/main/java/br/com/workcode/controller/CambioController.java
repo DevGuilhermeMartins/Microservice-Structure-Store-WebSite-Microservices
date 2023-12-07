@@ -23,11 +23,6 @@ public class CambioController {
 
 	private final CambioRepository cambioRepository;
 	
-	@GetMapping(value = "/all")
-	public List<Cambio> getAllCambio() {
-		return cambioRepository.findAll();
-	}
-	
 	@Operation(summary = "Get a value and makes a conversion by the currency from and to")
 	@GetMapping
 	public Cambio getCambio(@RequestParam("amount") BigDecimal amount,

@@ -16,6 +16,21 @@ services:
     networks:
       - BlueDiamond
       
+  catalog-db:
+    image: postgres:15.5-alpine3.18
+    restart: always
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=catalog-service
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=311005Ge
+    networks:
+      - BlueDiamond
+      
+      
   eureka-server:
     image: eureka-server
     build: ./eureka-server
@@ -28,21 +43,37 @@ services:
     image: cambio-service
     build: ./cambio-service
     environment:
-      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://localhost:8761/eureka
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
       - SPRING_DATASOURCE_URL=jdbc:postgresql://cambio-db:5432/cambio-service
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=311005Ge
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create
     ports:
       - 8000:8000
     depends_on:
       - eureka-server
       - cambio-db
-    links:
-      - "eureka-server"
-      - "cambio-db"
     networks:
       - BlueDiamond
- 
+
+  catalog-service:
+    image: catalog-service
+    build: ./catalog-service
+    environment:
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://catalog-db:5432/catalog-service
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=311005Ge
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+    ports:
+     - 9000:9000
+    depends_on:
+      - eureka-server
+      - catalog-db
+    networks:
+      - BlueDiamond
+      
 networks:
   BlueDiamond:
