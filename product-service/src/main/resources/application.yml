@@ -27,13 +27,15 @@ spring:
     name: product-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/product-service
+    url: jdbc:postgresql://localhost:5432/product-store-db
     username: postgres
     password: 311005Ge
   jpa:
-    defer-datasource-initialization: true
     hibernate:
       ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 management:
   tracing:
     sampling:

@@ -1,0 +1,125 @@
+version: '3'
+
+services:
+  
+  cambio-db:
+    image: postgres:latest
+    container_name: cambio-db
+    networks:
+      - cyberData
+    environment:
+      - POSTGRES_DB=cambio-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=311005Ge
+    ports:
+      - 5432:5432
+
+  catalog-db:
+    image: postgres:latest
+    container_name: catalog-db
+    networks:
+      - cyberData
+    environment:
+      - POSTGRES_DB=catalog-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=311005Ge
+    ports:
+      - 5433:5432
+
+  product-store-db:
+    image: postgres:latest
+    container_name: product-store-db
+    networks:
+      - cyberData
+    environment:
+      - POSTGRES_DB=product-store-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=311005Ge
+    ports:
+      - 5434:5432
+      
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - 9411:9411
+    depends_on:
+      - eureka-server
+    networks:
+      - cyberData
+      
+  eureka-server:
+    build: './eureka-server'
+    container_name: eureka-server
+    networks:
+      - cyberData
+    ports:
+      - 8761:8761
+      
+  api-gateway:
+    build: './api-gateway'
+    container_name: api-gateway
+    ports:
+      - 8765:8765
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_ZIPKIN_BASEURL=http://zipkin-server:9411
+    networks:
+      - cyberData
+      
+  cambio-service:
+    build: './cambio-service'
+    container_name: cambio-service
+    depends_on:
+      - eureka-server
+      - cambio-db
+    networks:
+      - cyberData
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://cambio-db:5432/cambio-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=311005Ge
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+      - SPRING_ZIPKIN_BASEURL=http://zipkin-server:9411
+    ports:
+      - 8000:8000
+      
+  catalog-service:
+    build: './catalog-service'
+    container_name: catalog-service
+    depends_on:
+      - eureka-server
+      - catalog-db
+    networks:
+      - cyberData
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://catalog-db:5432/catalog-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=311005Ge
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+      - SPRING_ZIPKIN_BASEURL=http://zipkin-server:9411
+    ports:
+      - 9000:9000
+      
+  product-service:
+    build: './product-service'
+    container_name: product-service
+    depends_on:
+      - eureka-server
+      - product-store-db
+    networks:
+      - cyberData
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://product-store-db:5432/product-store-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=311005Ge
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+      - SPRING_ZIPKIN_BASEURL=http://zipkin-server:9411
+    ports:
+      - 8080:8080
+    
+networks:
+  cyberData:
+    driver: bridge
