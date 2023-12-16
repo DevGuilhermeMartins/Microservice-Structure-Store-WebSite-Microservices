@@ -14,13 +14,16 @@ spring:
     name: cambio-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/cambio-service
-    username: postgres
-    password: 311005Ge
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:cambio-db}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:311005Ge}
   jpa:
-    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
+    properties:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+     
+      
 management:
   tracing:
     sampling:

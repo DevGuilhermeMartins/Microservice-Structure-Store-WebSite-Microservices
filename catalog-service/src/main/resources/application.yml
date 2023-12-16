@@ -1,7 +1,9 @@
 server:
-  port: 9000
+  port: 8001
 eureka:
   client:
+    register-with-eureka: true
+    fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka
 spring:
@@ -12,13 +14,14 @@ spring:
     name: catalog-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/catalog-service
-    username: postgres
-    password: 311005Ge
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:catalog-db}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:311005Ge}
   jpa:
-    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
+    properties:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
 management:
   tracing:
     sampling:

@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "Catalog Endpoint")
 @RestController
-@RequestMapping("catalog-service")
+@RequestMapping("/catalog-service")
 @RequiredArgsConstructor
 public class CatalogController {
 
