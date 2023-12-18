@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8000
 eureka:
   client:
     register-with-eureka: true
@@ -18,8 +18,9 @@ spring:
     username: postgres
     password: 311005Ge
   jpa:
+    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

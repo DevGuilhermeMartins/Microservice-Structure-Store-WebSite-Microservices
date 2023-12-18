@@ -1,19 +1,16 @@
-package br.com.workcode.response;
+package br.com.workcode.dto;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
-public class Cambio implements Serializable{
-	private static final long serialVersionUID = 1L;
+@AllArgsConstructor
+@NoArgsConstructor
+public class CambioDto {
 
-	private Long id;
 	private String from;
 	private String to;
 	private BigDecimal conversionFactor;

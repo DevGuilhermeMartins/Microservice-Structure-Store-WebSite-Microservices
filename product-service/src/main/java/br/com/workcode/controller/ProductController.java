@@ -1,21 +1,20 @@
 package br.com.workcode.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.workcode.dto.ProductDto;
 import br.com.workcode.model.Product;
-import br.com.workcode.proxy.CambioProxy;
-import br.com.workcode.proxy.CatalogProxy;
-import br.com.workcode.repository.ProductRepository;
+import br.com.workcode.service.ProductService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,53 +23,54 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Product Endpoints")
 @RestController
 @RequestMapping("/product-service")
-@RequiredArgsConstructor
 public class ProductController {
 
-	private final ProductRepository productRepository;
+	@Autowired
+	private ProductService productService;
 
-	private final CambioProxy proxyCambio;
-
-	private final CatalogProxy proxyCatalog;
-
+	@Autowired
+	private ModelMapper modelMapper;
+	
+	// Find All Products
 	@Operation(summary = "Find All Products")
 	@GetMapping
 	@CircuitBreaker(name = "findAllCircuit", fallbackMethod = "fallBackFindAll")
-	public List<Product> findAllProducts() {
-		List<Product> products = productRepository.findAll();
-		for (Product product : products) {
-			var productTax = proxyCatalog.getTaxCatalog(product.getCatalog(), product.getPrice());
-			product.setPrice(productTax.getTotalValue());
-		}
-		return products;
+	public List<ProductDto> findAllProducts() {
+
+		List<Product> products = productService.findAllProducts();
+		
+        return products.stream().map((product) -> modelMapper.map(product, ProductDto.class))
+                .collect(Collectors.toList());
 	}
 
+	// Find Product by id and make conversion
 	@Operation(summary = "Find a Product By your Id and make a conversion by currency")
 	@GetMapping("/conversion/{id}")
 	@CircuitBreaker(name = "findByIdAndCurrency", fallbackMethod = "FallBackProduct")
-	public Product findByIdAndCurrency(@PathVariable Long id, @RequestParam String currency) {
-		var product = productRepository.findById(id).orElseThrow(() -> new RuntimeException());
-
-		var catalogItem = proxyCatalog.getTaxCatalog(product.getCatalog(), product.getPrice());
-		var cambio = proxyCambio.getCambio(product.getPrice(), "USD", currency, catalogItem.getTotalValue());
-		product.setPrice(cambio.getConvertedValue());
-		return product;
+	public ResponseEntity<ProductDto> findByIdAndCurrency(@PathVariable Long id, @RequestParam String currency) {
+		Product product = productService.findByIdAndDoConversion(id, currency);
+		
+		// Convert Entity to Dto
+		ProductDto productResponse = modelMapper.map(product, ProductDto.class);
+		
+		return ResponseEntity.ok().body(productResponse);
 	}
 
+	// Find Products by catalog
 	@Operation(summary = "Filters all products by your catalog")
 	@GetMapping("/filter")
 	@CircuitBreaker(name = "findAllProdCatalog", fallbackMethod = "fallBackCatalogProd")
-	public List<Product> findAllProductsByCatalog(@RequestParam String catalog) {
-		List<Product> products = productRepository.findProductByCatalog(catalog);
-		if (products == null)
-			new RuntimeException("Catalog product doesn't search");
-		for (Product product : products) {
-			var productCatalog = proxyCatalog.getTaxCatalog(product.getCatalog(), product.getPrice());
-			product.setPrice(productCatalog.getTotalValue());
-		}
-		return products;
+	public List<ProductDto> findAllProductsByCatalog(@RequestParam String catalog) {
+		
+		// Using service to find Products By Catalog
+		List<Product> products = productService.findAllProductsByCatalog(catalog);
+		
+		// Converting List of Products Entity to Products DTO
+		return products.stream().map((product) -> modelMapper.map(product, ProductDto.class))
+                .collect(Collectors.toList());
 	}
 
+	/*// Find Product By Id
 	@Operation(summary = "Find a Product By your Id with your catalog tax")
 	@GetMapping("/item/{id}")
 	@CircuitBreaker(name = "findById", fallbackMethod = "fallBackFindById")
@@ -81,6 +81,7 @@ public class ProductController {
 		return product;
 	}
 
+	// FallBack For Find All Products
 	public List<Product> fallBackFindAll(Exception e) {
 		List<Product> products = productRepository.findAll();
 		for (Product product : products) {
@@ -92,6 +93,7 @@ public class ProductController {
 		return products;
 	}
 
+	// Fallback for Product find by Id
 	public Product fallBackFindById(Long id, Exception e) {
 		String prodName = "Product unavailable";
 		BigDecimal prodPrice = BigDecimal.valueOf(0.0);
@@ -99,6 +101,7 @@ public class ProductController {
 		return new Product(null, prodName, catalog, prodPrice);
 	}
 
+	// FallBack For Product find by catalog
 	public List<Product> fallBackCatalogProd(String catalog, Exception e) {
 		List<Product> products = productRepository.findProductByCatalog(catalog);
 		for (Product product : products) {
@@ -110,6 +113,7 @@ public class ProductController {
 		return products;
 	}
 
+	// FallBack For Product converted with cambio
 	public Product FallBackProduct(Long id, String currency, Exception e) {
 		String prodName = "Product unavailable";
 		BigDecimal prodPrice = BigDecimal.valueOf(0.0);
@@ -117,6 +121,7 @@ public class ProductController {
 		return new Product(null, prodName, catalog, prodPrice);
 	}
 
+	// Update Product
 	@Operation(summary = "Update a Product")
 	@PutMapping("/{id}")
 	public Product update(@PathVariable("id") Long id, @RequestBody Product prod) {
@@ -125,6 +130,7 @@ public class ProductController {
 		return prodModel;
 	}
 
+	// Delete Product
 	@Operation(summary = "Delete a Product")
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable("id") Long id) {
@@ -134,5 +140,5 @@ public class ProductController {
 	private void updateData(Product prodModel, Product prod) {
 		prodModel.setProductName(prod.getProductName());
 		prodModel.setPrice(prod.getPrice());
-	}
+	}*/
 }

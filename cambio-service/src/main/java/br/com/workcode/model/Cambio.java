@@ -8,7 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +15,7 @@ import lombok.ToString;
 
 @Entity(name = "cambio")
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @ToString
 public class Cambio implements Serializable{
@@ -29,15 +29,10 @@ public class Cambio implements Serializable{
 	private String from;
 	@Column(name = "to_currency", nullable = false, length = 3)
 	private String to;
-	@Column(nullable = false)
+	@Column(name = "conversion_factor", nullable = false)
 	private BigDecimal conversionFactor;
 	
-	@Transient
 	private BigDecimal convertedValue;
 	
-	public Cambio(String from, String to, BigDecimal conversionFactor) {
-        this.from = from;
-        this.to = to;
-        this.conversionFactor = conversionFactor;
-    }
+	
 }

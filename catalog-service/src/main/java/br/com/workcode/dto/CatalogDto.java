@@ -1,20 +1,18 @@
-package br.com.workcode.response;
+package br.com.workcode.dto;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
-public class Catalog implements Serializable{
-	private static final long serialVersionUID = 1L;
-	
-	private Long id;
+@AllArgsConstructor
+@NoArgsConstructor
+public class CatalogDto {
+
 	private String catalogName;
 	private BigDecimal catalogTax;
 	private BigDecimal totalValue;
+
 }

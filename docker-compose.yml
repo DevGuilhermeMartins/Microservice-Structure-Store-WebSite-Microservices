@@ -80,7 +80,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=311005Ge
       - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
-      - SPRING_ZIPKIN_BASEURL=http://zipkin-server:9411
+      - SPRING_ZIPKIN_BASEURL=http://zipkin-server:9411/
     ports:
       - 8000:8000
       
@@ -98,7 +98,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=311005Ge
       - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
-      - SPRING_ZIPKIN_BASEURL=http://zipkin-server:9411
+      - SPRING_ZIPKIN_BASEURL=http://zipkin-server:9411/
     ports:
       - 9000:9000
       
@@ -116,7 +116,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=311005Ge
       - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
-      - SPRING_ZIPKIN_BASEURL=http://zipkin-server:9411
+      - SPRING_ZIPKIN_BASEURL=http://zipkin-server:9411/
     ports:
       - 8080:8080
     
