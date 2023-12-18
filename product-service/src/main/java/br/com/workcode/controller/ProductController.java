@@ -1,13 +1,17 @@
 package br.com.workcode.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +22,6 @@ import br.com.workcode.service.ProductService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 
 @Tag(name = "Product Endpoints")
 @RestController
@@ -70,20 +73,23 @@ public class ProductController {
                 .collect(Collectors.toList());
 	}
 
-	/*// Find Product By Id
+	// Find Product By Id
 	@Operation(summary = "Find a Product By your Id with your catalog tax")
 	@GetMapping("/item/{id}")
 	@CircuitBreaker(name = "findById", fallbackMethod = "fallBackFindById")
-	public Product findItemById(@PathVariable Long id) {
-		Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Resource not found"));
-		var productCatalog = proxyCatalog.getTaxCatalog(product.getCatalog(), product.getPrice());
-		product.setPrice(productCatalog.getTotalValue());
-		return product;
+	public ResponseEntity<ProductDto> findItemById(@PathVariable Long id) {
+		// Find Product Entity with ProductService findProductById
+		Product product = productService.findProductById(id);
+		
+		// Convert Entity to DTO
+		ProductDto productResponse = modelMapper.map(product, ProductDto.class);
+		
+		return ResponseEntity.ok().body(productResponse);
 	}
 
 	// FallBack For Find All Products
 	public List<Product> fallBackFindAll(Exception e) {
-		List<Product> products = productRepository.findAll();
+		List<Product> products = productService.findAllProducts();
 		for (Product product : products) {
 			product.setId(null);
 			product.setProductName("Product unavailable");
@@ -103,7 +109,7 @@ public class ProductController {
 
 	// FallBack For Product find by catalog
 	public List<Product> fallBackCatalogProd(String catalog, Exception e) {
-		List<Product> products = productRepository.findProductByCatalog(catalog);
+		List<Product> products = productService.findAllProductsByCatalog(catalog);
 		for (Product product : products) {
 			product.setId(null);
 			product.setProductName("Product unavailable");
@@ -124,21 +130,24 @@ public class ProductController {
 	// Update Product
 	@Operation(summary = "Update a Product")
 	@PutMapping("/{id}")
-	public Product update(@PathVariable("id") Long id, @RequestBody Product prod) {
-		var prodModel = productRepository.findById(id).orElseThrow(() -> new RuntimeException());
-		updateData(prodModel, prod);
-		return prodModel;
+	public ResponseEntity<ProductDto> update(@PathVariable("id") Long id, @RequestBody Product prod) {
+		// Find Product by Id in Entity
+		Product prodModel = productService.findProductById(id);
+		
+		// Make the update Method
+		Product prodUpdate = productService.update(id, prodModel);
+		
+		// Convert Entity to DTO
+		ProductDto productResponse = modelMapper.map(prodUpdate, ProductDto.class);
+		
+		return ResponseEntity.ok().body(productResponse);
 	}
 
 	// Delete Product
 	@Operation(summary = "Delete a Product")
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable("id") Long id) {
-		productRepository.deleteById(id);
+	public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+		productService.delete(id);
+		return ResponseEntity.noContent().build();
 	}
-
-	private void updateData(Product prodModel, Product prod) {
-		prodModel.setProductName(prod.getProductName());
-		prodModel.setPrice(prod.getPrice());
-	}*/
 }
