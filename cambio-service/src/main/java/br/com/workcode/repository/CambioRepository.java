@@ -6,5 +6,5 @@ import br.com.workcode.model.Cambio;
 
 public interface CambioRepository extends JpaRepository<Cambio, Long>{
 
-	public Cambio findByFromAndTo(String from, String to);
+	public Cambio findByTo(String to);
 }

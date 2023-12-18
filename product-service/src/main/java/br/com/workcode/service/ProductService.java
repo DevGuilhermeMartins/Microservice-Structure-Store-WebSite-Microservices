@@ -40,7 +40,7 @@ public class ProductService {
 		
 		var catalogItem = catalogProxy.getTaxCatalog(product.getCatalog(), product.getPrice());
 		product.setPrice(catalogItem.getTotalValue());
-		var cambio = cambioProxy.getCambio(product.getPrice(), "USD", currency);
+		var cambio = cambioProxy.getCambio(product.getPrice(), currency);
 		product.setPrice(cambio.getConvertedValue());
 		return product;
 	}

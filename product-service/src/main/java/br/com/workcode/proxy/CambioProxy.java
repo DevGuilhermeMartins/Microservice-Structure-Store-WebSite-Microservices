@@ -14,6 +14,5 @@ public interface CambioProxy {
 
 	@GetMapping(value = "/cambio-service")
 	public Cambio getCambio(@RequestParam("amount") BigDecimal amount,
-							@RequestParam("from") String from,
 							@RequestParam("to") String to);
 }

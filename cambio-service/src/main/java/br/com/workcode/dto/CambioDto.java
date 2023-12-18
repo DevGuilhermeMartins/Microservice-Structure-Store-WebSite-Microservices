@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CambioDto {
 
-	private String from;
 	private String to;
 	private BigDecimal conversionFactor;
 	private BigDecimal convertedValue;

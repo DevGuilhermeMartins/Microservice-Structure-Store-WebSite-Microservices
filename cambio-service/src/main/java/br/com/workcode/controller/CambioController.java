@@ -30,11 +30,10 @@ public class CambioController {
 	@Operation(summary = "Get a value and makes a conversion by the currency from and to")
 	@GetMapping
 	public ResponseEntity<CambioDto> getCambio(@RequestParam("amount") BigDecimal amount,
-							@RequestParam("from") String from,
 							@RequestParam("to") String to) {
 		
 		// Using getCambio with CambioEntity
-		Cambio cambioEntity = cambioService.getCambio(amount, from, to);
+		Cambio cambioEntity = cambioService.getCambio(amount, to);
 		
 		// Convert Entity to DTO
 		CambioDto cambioResponse = modelMapper.map(cambioEntity, CambioDto.class);

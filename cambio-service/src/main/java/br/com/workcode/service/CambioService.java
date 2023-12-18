@@ -16,9 +16,9 @@ public class CambioService {
 	private CambioRepository cambioRepository;
 	
 	
-	public Cambio getCambio(BigDecimal amount, String from, String to) {
+	public Cambio getCambio(BigDecimal amount, String to) {
 		
-		Cambio cambio = cambioRepository.findByFromAndTo(from, to);
+		Cambio cambio = cambioRepository.findByTo(to);
 		BigDecimal conversionFactor = cambio.getConversionFactor();
 		BigDecimal convertedValue = conversionFactor.multiply(amount);
 		cambio.setConvertedValue(convertedValue.setScale(2, RoundingMode.CEILING));
