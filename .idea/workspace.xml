@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c937db6-34d8-4c72-a40e-05bbbc4580e9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Seller Store - Microservices.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Seller Store - Microservices.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cambio-service/mvn" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/catalog-service/mvn" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cambio-service/src/main/java/br/com/workcode/controller/CambioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/cambio-service/src/main/java/br/com/workcode/controller/CambioController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cambio-service/src/main/java/br/com/workcode/service/CambioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/cambio-service/src/main/java/br/com/workcode/service/CambioService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,19 +27,23 @@
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="2Zir7Sot8Rv87CrPOg1kB8X7meG" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "jdk.selected.JAVA_MODULE": "17",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/temp/Workcode - Microservices/Seller Store - Microservices",
-    "settings.editor.selected.configurable": "MavenSettings"
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
   <component name="SharedIndexes">
@@ -57,5 +63,8 @@
       <updated>1702915575093</updated>
     </task>
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>
