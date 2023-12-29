@@ -8,7 +8,7 @@ services:
     networks:
       - cyberData
     environment:
-      - POSTGRES_DB=cambio-db
+      - POSTGRES_DB=cambio_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=311005Ge
     ports:
@@ -21,7 +21,7 @@ services:
       - cyberData
     volumes:
      - .:/flyway/sql
-    command: -url=jdbc:postgres://db -schemas=cambio-db -user=postgres -password=311005Ge -connectRetries=60 migrate
+    command: -url=jdbc:postgres://db -schemas=cambio_db -user=postgres -password=311005Ge -connectRetries=60 migrate
     depends_on:
       - cambio-db
 
@@ -31,7 +31,7 @@ services:
     networks:
       - cyberData
     environment:
-      - POSTGRES_DB=catalog-db
+      - POSTGRES_DB=catalog_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=311005Ge
     ports:
@@ -44,7 +44,7 @@ services:
       - cyberData
     volumes:
      - .:/flyway/sql
-    command: -url=jdbc:postgres://db -schemas=catalog-db -user=postgres -password=311005Ge -connectRetries=60 migrate
+    command: -url=jdbc:postgres://db -schemas=catalog_db -user=postgres -password=311005Ge -connectRetries=60 migrate
     depends_on:
       - catalog-db
 
@@ -54,7 +54,7 @@ services:
     networks:
       - cyberData
     environment:
-      - POSTGRES_DB=product-store-db
+      - POSTGRES_DB=product_store_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=311005Ge
     ports:
@@ -67,7 +67,7 @@ services:
       - cyberData
     volumes:
      - .:/flyway/sql
-    command: -url=jdbc:postgres://db -schemas=product-store-db -user=postgres -password=311005Ge -connectRetries=60 migrate
+    command: -url=jdbc:postgres://db -schemas=product_store_db -user=postgres -password=311005Ge -connectRetries=60 migrate
     depends_on:
      - product-store-db
       
@@ -109,11 +109,11 @@ services:
       - cyberData
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://cambio-db:5432/cambio-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://cambio-db:5432/cambio_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=311005Ge
       - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
-      - SPRING_FLYWAY_URL=jdbc:postgresql://cambio-db:5432/cambio-db
+      - SPRING_FLYWAY_URL=jdbc:postgresql://cambio-db:5432/cambio_db
       - SPRING_FLYWAY_USER=postgres
       - SPRING_FLYWAY_PASSWORD=311005Ge
       - SPRING_ZIPKIN_BASEURL=http://zipkin-server:9411/
@@ -130,11 +130,11 @@ services:
       - cyberData
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://catalog-db:5432/catalog-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://catalog-db:5432/catalog_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=311005Ge
       - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
-      - SPRING_FLYWAY_URL=jdbc:postgresql://catalog-db:5432/catalog-db
+      - SPRING_FLYWAY_URL=jdbc:postgresql://catalog-db:5432/catalog_db
       - SPRING_FLYWAY_USER=postgres
       - SPRING_FLYWAY_PASSWORD=311005Ge
       - SPRING_ZIPKIN_BASEURL=http://zipkin-server:9411/
@@ -151,11 +151,11 @@ services:
       - cyberData
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://product-store-db:5432/product-store-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://product-store-db:5432/product_store_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=311005Ge
       - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
-      - SPRING_FLYWAY_URL=jdbc:postgresql://product-store-db:5432/product-store-db
+      - SPRING_FLYWAY_URL=jdbc:postgresql://product-store-db:5432/product_store_db
       - SPRING_FLYWAY_USER=postgres
       - SPRING_FLYWAY_PASSWORD=311005Ge
       - SPRING_ZIPKIN_BASEURL=http://zipkin-server:9411/
