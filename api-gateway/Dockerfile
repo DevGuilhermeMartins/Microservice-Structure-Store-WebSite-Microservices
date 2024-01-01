@@ -1,6 +1,4 @@
-FROM openjdk:17-alpine
-ENV APP_NAME api-gateway
-COPY ./target/${APP_NAME}.jar  /app/${APP_NAME}.jar
-WORKDIR /app
-CMD java -jar ${APP_NAME}.jar
-EXPOSE 8080
+FROM eclipse-temurin:17-jdk-alpine
+COPY . /app
+COPY target/*.jar application.jar
+ENTRYPOINT ["java", "-jar", "application.jar"]
